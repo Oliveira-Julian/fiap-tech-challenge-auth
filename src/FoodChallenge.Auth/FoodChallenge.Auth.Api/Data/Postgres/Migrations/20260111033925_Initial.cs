@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodChallenge.Auth.API.Data.Postgres.Migrations
+namespace FoodChallenge.Auth.Api.Data.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

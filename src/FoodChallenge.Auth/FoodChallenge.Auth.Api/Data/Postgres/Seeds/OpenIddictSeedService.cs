@@ -64,6 +64,7 @@ public class OpenIddictSeedService(
             };
 
             descriptor.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Token);
+            descriptor.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Introspection);
             descriptor.Permissions.Add(OpenIddictConstants.Permissions.GrantTypes.ClientCredentials);
             descriptor.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.Token);
 
