@@ -19,6 +19,20 @@ services:
     networks:
       - foodchallenge_network
 
+  foodchallenge_migrations:
+    image: foodchallenge/auth-migrations
+    container_name: foodchallenge_auth_migrations
+    build:
+      context: ../../src/FoodChallenge.Auth
+      dockerfile: ../../tools/docker/build/migrations.postgres.Dockerfile
+    environment:
+      ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
+    networks:
+      - foodchallenge_network
+    depends_on:
+      foodchallenge_db:
+        condition: service_healthy
+
   foodchallenge_auth_api:
     image: foodchallenge/auth-api
     container_name: foodchallenge_auth_api
@@ -34,7 +48,10 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - foodchallenge_db
+      foodchallenge_migrations:
+        condition: service_completed_successfully
+      foodchallenge_db:
+        condition: service_healthy
 
 volumes:
   foodchallenge_data:
