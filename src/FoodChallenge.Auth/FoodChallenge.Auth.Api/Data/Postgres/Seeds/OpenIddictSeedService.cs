@@ -25,7 +25,12 @@ public class OpenIddictSeedService(
             "orders.write",
         };
 
-        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes);
+        var audiences = new[]
+        {
+            "orders-api"
+        };
+
+        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
     }
 
     private async Task SeedConfigurationApiClientAsync()
@@ -37,18 +42,24 @@ public class OpenIddictSeedService(
         var scopes = new[]
         {
             "openid",
-            "configuration.read",
-            "configuration.write",
+            "configurations.read",
+            "configurations.write",
         };
 
-        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes);
+        var audiences = new[]
+        {
+            "configurations-api"
+        };
+
+        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
     }
 
     private async Task CreateClientIfNotExistsAsync(
         string clientId,
         string clientSecret,
         string displayName,
-        string[] scopes)
+        string[] scopes,
+        string[] audiences)
     {
         try
         {
@@ -71,6 +82,11 @@ public class OpenIddictSeedService(
             foreach (var scope in scopes)
             {
                 descriptor.Permissions.Add($"{OpenIddictConstants.Permissions.Prefixes.Scope}{scope}");
+            }
+
+            foreach (var audience in audiences)
+            {
+                descriptor.Permissions.Add($"{OpenIddictConstants.Permissions.Prefixes.Audience}{audience}");
             }
 
             await applicationManager.CreateAsync(descriptor);
