@@ -55,6 +55,18 @@ public class AuthorizationController : Controller
 
             var principal = new System.Security.Claims.ClaimsPrincipal(identity);
             principal.SetScopes(request.GetScopes());
+            
+            // Obter audiences das permissões do cliente
+            var permissions = await _applicationManager.GetPermissionsAsync(application);
+            var allowedAudiences = permissions
+                .Where(p => p.StartsWith(OpenIddictConstants.Permissions.Prefixes.Audience))
+                .Select(p => p.Substring(OpenIddictConstants.Permissions.Prefixes.Audience.Length))
+                .ToList();
+            
+            if (allowedAudiences.Any())
+            {
+                principal.SetResources(allowedAudiences);
+            }
 
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
