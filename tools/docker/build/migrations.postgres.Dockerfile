@@ -10,4 +10,4 @@ FROM build as migrations
 WORKDIR /src
 RUN dotnet tool install --version 9.0.5 --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
-ENTRYPOINT dotnet-ef database update --project FoodChallenge.Auth.Api --startup-project
+ENTRYPOINT dotnet-ef database update --project FoodChallenge.Auth.Api --startup-project FoodChallenge.Auth.Api

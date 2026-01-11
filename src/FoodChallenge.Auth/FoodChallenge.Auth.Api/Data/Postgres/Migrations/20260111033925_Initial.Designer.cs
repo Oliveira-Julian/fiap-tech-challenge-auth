@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodChallenge.Auth.API.Data.Postgres.Migrations
+namespace FoodChallenge.Auth.Api.Data.Postgres.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260111025839_Initial")]
+    [Migration("20260111033925_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

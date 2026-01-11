@@ -139,7 +139,45 @@ git clone https://github.com/seu-usuario/fiap-tech-challenge-auth.git
 cd fiap-tech-challenge-auth
 ```
 
-#### 2. Iniciar o banco de dados com Docker
+#### 2. Gerar Certificado HTTPS de Desenvolvimento
+
+A API requer HTTPS para funcionar corretamente. Antes de iniciar os containers, gere um certificado de desenvolvimento:
+
+**Windows (PowerShell):**
+```powershell
+# Criar diretório para certificados
+$certPath = Join-Path $env:USERPROFILE ".aspnet\https"
+New-Item -ItemType Directory -Force -Path $certPath
+
+# Gerar certificado
+dotnet dev-certs https -ep "$certPath\aspnetapp.pfx" -p "DevCert@2024"
+
+# Confiar no certificado (opcional, mas recomendado)
+dotnet dev-certs https --trust
+```
+
+**Linux/macOS:**
+```bash
+# Criar diretório para certificados
+mkdir -p ~/.aspnet/https
+
+# Gerar certificado
+dotnet dev-certs https -ep ~/.aspnet/https/aspnetapp.pfx -p "DevCert@2024"
+
+# Confiar no certificado (opcional)
+dotnet dev-certs https --trust
+```
+
+**Configurar senha no arquivo .env:**
+
+Adicione a variável `CERT_PASSWORD` no arquivo `tools/docker/.env`:
+```env
+CERT_PASSWORD=DevCert@2024
+```
+
+> 📝 **Nota**: Use a mesma senha definida no comando de geração do certificado.
+
+#### 3. Iniciar o banco de dados com Docker
 
 ```bash
 cd tools/docker
@@ -148,7 +186,7 @@ docker-compose up -d foodchallenge_db
 
 Aguarde até que o PostgreSQL esteja pronto (cerca de 5-10 segundos).
 
-#### 3. Restaurar dependências e executar a API
+#### 4. Restaurar dependências e executar a API
 
 ```bash
 cd ../../src/FoodChallenge.Auth
@@ -162,7 +200,9 @@ A API estará disponível em:
 - **HTTPS**: `https://localhost:5001`
 - **HTTP**: `http://localhost:5000`
 
-#### 4. Verificar se a aplicação está funcionando
+> ⚠️ **Importante**: Por padrão, o OpenIddict **requer HTTPS**. Certifique-se de que o certificado foi gerado corretamente conforme o passo 2.
+
+#### 5. Verificar se a aplicação está funcionando
 
 ```bash
 # Obter um token de acesso
