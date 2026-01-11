@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "add7d6af-b068-4417-a28f-c7a43fdaf62b",
+		"name": "Fiap - Tech Challenge - Auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45552305",
+		"_collection_link": "https://dev000-9306.postman.co/workspace/FIAP---Tech-Challeng~b2541790-d129-446d-ae64-d00a2f6a2cf9/collection/45552305-add7d6af-b068-4417-a28f-c7a43fdaf62b?action=share&source=collection_link&creator=45552305"
+	},
+	"item": [
+		{
+			"name": "connect/introspect",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{CLIENT_SECRET_ORDER}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{CLIENT_ID_ORDER}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{ACCESS_TOKEN}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL_AUTH}}connect/introspect",
+					"host": [
+						"{{BASE_URL_AUTH}}connect"
+					],
+					"path": [
+						"introspect"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7217/pedido' \\\r\n  -H 'accept: text/plain' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"idCliente\": 0,\r\n  \"itens\": [\r\n    {\r\n      \"idProduto\": 0,\r\n      \"quantidade\": 0\r\n    }\r\n  ]\r\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "connect/token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token variable for subsequent API invocations\", function () {\r",
+							"    var responseJson = pm.response.json();\r",
+							"    pm.globals.set('ACCESS_TOKEN', responseJson.access_token);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "orders.write orders.read",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{CLIENT_SECRET_ORDER}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{CLIENT_ID_ORDER}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL_AUTH}}connect/token",
+					"host": [
+						"{{BASE_URL_AUTH}}connect"
+					],
+					"path": [
+						"token"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7217/pedido' \\\r\n  -H 'accept: text/plain' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"idCliente\": 0,\r\n  \"itens\": [\r\n    {\r\n      \"idProduto\": 0,\r\n      \"quantidade\": 0\r\n    }\r\n  ]\r\n}'"
+			},
+			"response": []
+		}
+	]
+}
