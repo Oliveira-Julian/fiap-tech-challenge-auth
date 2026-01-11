@@ -1,7 +1,7 @@
 services:
-  foodchallenge_db:
+  foodchallenge_postgres_db:
     image: postgres:17
-    container_name: foodchallenge_db
+    container_name: foodchallenge_postgres_db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -30,7 +30,7 @@ services:
     networks:
       - foodchallenge_network
     depends_on:
-      foodchallenge_db:
+      foodchallenge_postgres_db:
         condition: service_healthy
 
   foodchallenge_auth_api:
@@ -55,7 +55,7 @@ services:
     depends_on:
       foodchallenge_migrations:
         condition: service_completed_successfully
-      foodchallenge_db:
+      foodchallenge_postgres_db:
         condition: service_healthy
 
 volumes:
