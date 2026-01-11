@@ -42,11 +42,16 @@ services:
     environment:
       ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-      ASPNETCORE_URLS: http://+:5000
+      ASPNETCORE_URLS: https://+:5000;http://+:5011
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     networks:
       - foodchallenge_network
     ports:
       - "5000:5000"
+      - "5011:5011"
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
     depends_on:
       foodchallenge_migrations:
         condition: service_completed_successfully
