@@ -27,14 +27,19 @@ builder.Services.AddOpenIddict()
         options.RegisterScopes(
             "orders.read",
             "orders.write",
-            "configuration.read",
-            "configuration.write");
+            "configurations.read",
+            "configurations.write");
+
+        // Registrar audiences (recursos)
+        options.RegisterClaims(OpenIddict.Abstractions.OpenIddictConstants.Claims.Audience);
 
         options.AddDevelopmentEncryptionCertificate()
                .AddDevelopmentSigningCertificate();
 
         options.UseAspNetCore()
                .EnableTokenEndpointPassthrough();
+
+        options.DisableAccessTokenEncryption();
     })
     .AddValidation(options =>
     {
