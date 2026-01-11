@@ -1,0 +1,23 @@
+services:
+  foodchallenge_api:
+    image: julianoliveira/foodchallenge-api
+    container_name: foodchallenge_api
+    build:
+      context: ../../src/FoodChallenge
+      dockerfile: ../../tools/docker/build/dotnet.web-api.Dockerfile
+      target: final
+    environment:
+      ConnectionStrings__DPostgreSQL: ${ConnectionStrings__DPostgreSQL}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+    networks:
+      - foodchallenge_network
+    ports:
+      - "5000:5000"
+
+volumes:
+  foodchallenge_data:
+    driver: local
+
+networks:
+  foodchallenge_network:
+    driver: bridge

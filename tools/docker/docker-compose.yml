@@ -1,0 +1,67 @@
+services:
+  foodchallenge_db:
+    image: postgres:17
+    container_name: foodchallenge_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - foodchallenge_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - foodchallenge_network
+
+  foodchallenge_migrations:
+    image: foodchallenge/auth-migrations
+    container_name: foodchallenge_auth_migrations
+    build:
+      context: ../../src/FoodChallenge.Auth
+      dockerfile: ../../tools/docker/build/migrations.postgres.Dockerfile
+    environment:
+      ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
+    networks:
+      - foodchallenge_network
+    depends_on:
+      foodchallenge_db:
+        condition: service_healthy
+
+  foodchallenge_auth_api:
+    image: foodchallenge/auth-api
+    container_name: foodchallenge_auth_api
+    build:
+      context: ../../src/FoodChallenge.Auth
+      dockerfile: ../../tools/docker/build/dotnet.web-api.Dockerfile
+    environment:
+      ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      ASPNETCORE_URLS: https://+:5000;http://+:5011
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+    networks:
+      - foodchallenge_network
+    ports:
+      - "5000:5000"
+      - "5011:5011"
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
+    depends_on:
+      foodchallenge_migrations:
+        condition: service_completed_successfully
+      foodchallenge_db:
+        condition: service_healthy
+
+volumes:
+  foodchallenge_data:
+    driver: local
+
+networks:
+  foodchallenge_network:
+    driver: bridge
