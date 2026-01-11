@@ -1,0 +1,45 @@
+services:
+  foodchallenge_db:
+    image: postgres:17
+    container_name: foodchallenge_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - foodchallenge_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - foodchallenge_network
+
+  foodchallenge_auth_api:
+    image: foodchallenge/auth-api
+    container_name: foodchallenge_auth_api
+    build:
+      context: ../../src/FoodChallenge.Auth
+      dockerfile: ../../tools/docker/build/dotnet.web-api.Dockerfile
+    environment:
+      ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      ASPNETCORE_URLS: http://+:5000
+    networks:
+      - foodchallenge_network
+    ports:
+      - "5000:5000"
+    depends_on:
+      - foodchallenge_db
+
+volumes:
+  foodchallenge_data:
+    driver: local
+
+networks:
+  foodchallenge_network:
+    driver: bridge
