@@ -1,3 +1,4 @@
+using FoodChallenge.Auth.Api.Constants;
 using FoodChallenge.Auth.Api.Data.Postgres;
 using FoodChallenge.Auth.Api.Data.Postgres.Seeds;
 using FoodChallenge.Auth.Api.Extensions;
@@ -25,13 +26,24 @@ builder.Services.AddOpenIddict()
         options.AllowClientCredentialsFlow();
 
         options.RegisterScopes(
-            "orders.read",
-            "orders.write",
-            "configurations.read",
-            "configurations.write");
+            AuthConstants.Scopes.OrdersRead,
+            AuthConstants.Scopes.OrdersWrite,
+            AuthConstants.Scopes.ConfigurationsRead,
+            AuthConstants.Scopes.ConfigurationsWrite,
+            AuthConstants.Scopes.PaymentsRead,
+            AuthConstants.Scopes.PaymentsWrite,
+            AuthConstants.Scopes.KitchensRead,
+            AuthConstants.Scopes.KitchensWrite);
 
         // Registrar audiences (recursos)
         options.RegisterClaims(OpenIddict.Abstractions.OpenIddictConstants.Claims.Audience);
+        
+        // Adicionar audiences disponíveis
+        options.RegisterScopes(
+            AuthConstants.Audiences.OrdersApi,
+            AuthConstants.Audiences.ConfigurationsApi,
+            AuthConstants.Audiences.PaymentsApi,
+            AuthConstants.Audiences.KitchensApi);
 
         options.AddDevelopmentEncryptionCertificate()
                .AddDevelopmentSigningCertificate();

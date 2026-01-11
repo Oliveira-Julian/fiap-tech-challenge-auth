@@ -1,3 +1,4 @@
+using FoodChallenge.Auth.Api.Constants;
 using OpenIddict.Abstractions;
 
 namespace FoodChallenge.Auth.Api.Data.Postgres.Seeds;
@@ -9,7 +10,9 @@ public class OpenIddictSeedService(
     public async Task SeedAsync()
     {
         await SeedOrdersApiClientAsync();
-        await SeedConfigurationApiClientAsync();
+        await SeedConfigurationsApiClientAsync();
+        await SeedPaymentsApiClientAsync();
+        await SeedKitchensApiClientAsync();
     }
 
     private async Task SeedOrdersApiClientAsync()
@@ -20,35 +23,76 @@ public class OpenIddictSeedService(
 
         var scopes = new[]
         {
-            "openid",
-            "orders.read",
-            "orders.write",
+            OpenIddictConstants.Scopes.OpenId,
+            AuthConstants.Scopes.OrdersRead,
+            AuthConstants.Scopes.OrdersWrite,
         };
 
         var audiences = new[]
         {
-            "orders-api"
+            AuthConstants.Audiences.OrdersApi
         };
 
         await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
     }
 
-    private async Task SeedConfigurationApiClientAsync()
+    private async Task SeedConfigurationsApiClientAsync()
     {
         const string clientId = "f2b46aaa-084c-4ce1-8361-27a472cfe320";
         const string clientSecret = "948a0a2e-5072-4739-818c-6f53ddc2a192";
-        const string displayName = "Configuration API";
+        const string displayName = "Configurations API";
 
         var scopes = new[]
         {
-            "openid",
-            "configurations.read",
-            "configurations.write",
+            OpenIddictConstants.Scopes.OpenId,
+            AuthConstants.Scopes.ConfigurationsRead,
+            AuthConstants.Scopes.ConfigurationsWrite,
         };
 
         var audiences = new[]
         {
-            "configurations-api"
+            AuthConstants.Audiences.ConfigurationsApi
+        };
+
+        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
+    }
+
+    private async Task SeedPaymentsApiClientAsync()
+    {
+        const string clientId = "cd23f25d-6ebb-44dd-8458-b353bea49820";
+        const string clientSecret = "cdb90fc1-a972-446f-9cd5-fa45bec7a60f";
+        const string displayName = "Payments API";
+
+        var scopes = new[]
+        {
+            OpenIddictConstants.Scopes.OpenId,
+            AuthConstants.Scopes.PaymentsRead,
+            AuthConstants.Scopes.PaymentsWrite,
+        };
+
+        var audiences = new[]
+        {
+            AuthConstants.Audiences.PaymentsApi
+        };
+
+        await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
+    }
+
+    private async Task SeedKitchensApiClientAsync()
+    {
+        const string clientId = "42d9f099-651a-4a85-b250-50c6e7c57e25";
+        const string clientSecret = "a38fbf18-fd77-4cb6-b905-e15a40348bab";
+        const string displayName = "Kitchens API";
+        var scopes = new[]
+        {
+            OpenIddictConstants.Scopes.OpenId,
+            AuthConstants.Scopes.KitchensRead,
+            AuthConstants.Scopes.KitchensWrite,
+        };
+
+        var audiences = new[]
+        {
+            AuthConstants.Audiences.KitchensApi
         };
 
         await CreateClientIfNotExistsAsync(clientId, clientSecret, displayName, scopes, audiences);
