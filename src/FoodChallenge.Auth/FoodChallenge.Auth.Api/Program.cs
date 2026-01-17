@@ -29,6 +29,8 @@ builder.Services.AddOpenIddict()
         options.SetIntrospectionEndpointUris("/connect/introspect");
 
         options.AllowClientCredentialsFlow();
+        
+        options.RegisterClaims(OpenIddict.Abstractions.OpenIddictConstants.Claims.Scope);
 
         options.RegisterScopes(
             AuthConstants.Scopes.OrdersRead,
