@@ -20,6 +20,11 @@ builder.Services.AddOpenIddict()
     })
     .AddServer(options =>
     {
+        var issuerUrl = configuration["Authentication:IssuerUrl"];
+
+        if (!string.IsNullOrEmpty(issuerUrl))
+            options.SetIssuer(new Uri(issuerUrl));
+
         options.SetTokenEndpointUris("/connect/token");
         options.SetIntrospectionEndpointUris("/connect/introspect");
 

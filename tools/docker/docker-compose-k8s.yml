@@ -8,6 +8,7 @@ services:
       target: final
     environment:
       ConnectionStrings__DPostgreSQL: ${ConnectionStrings__DPostgreSQL}
+      Authentication__IssuerUrl: ${Authentication__IssuerUrl}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
     networks:
       - foodchallenge_network
@@ -21,3 +22,4 @@ volumes:
 networks:
   foodchallenge_network:
     driver: bridge
+    name: fiap_foodchallenge_network

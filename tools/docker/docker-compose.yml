@@ -41,6 +41,7 @@ services:
       dockerfile: ../../tools/docker/build/dotnet.web-api.Dockerfile
     environment:
       ConnectionStrings__PostgreSQL: ${ConnectionStrings__PostgreSQL}
+      Authentication__IssuerUrl: ${Authentication__IssuerUrl}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: https://+:5000;http://+:5011
       ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PASSWORD}
@@ -65,3 +66,4 @@ volumes:
 networks:
   foodchallenge_network:
     driver: bridge
+    name: fiap_foodchallenge_network
